@@ -16,5 +16,10 @@ $font-size-large: 20px;
 $color-primary: #007bff;
 $color-secondary: #6c757d; 
 $color-white: #ffffff;
+$color-black: #000000;
 
 
+
+.text-white {
+    color: $color-white;
+}

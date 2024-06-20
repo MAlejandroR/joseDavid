@@ -9,19 +9,19 @@
             <!-- Contenedor de la imagen y descripción -->
             <div class="flex flex-col">
                 <!-- Imagen de Perfil -->
-                <div class="rounded-lg h-96 w-96 bg-gray-200 flex-shrink-0 overflow-hidden">
+                <div class="rounded-lg h-96 w-96 bg-gray-200 flex-shrink-0 overflow-hidden mx-auto md:mx-0">
                     <img src="{{ asset('storage/' . Auth::user()->imagen_perfil) }}" alt="Imagen Perfil" class="h-full w-full object-cover" />
                 </div>
                 <!-- Descripción -->
-                <div class="bg-gray-200 bg-opacity-75 p-4 mt-4 rounded-lg" style="width: 24rem;"> 
+                <div class="bg-gray-200 bg-opacity-75 p-4 mt-4 rounded-lg mx-auto md:mx-0" style="width: 24rem;"> 
                     <p class="text-sm">{{ Auth::user()->descripcion }}</p>
                 </div>
             </div>
             <!-- Botón de Editar Perfil -->
-            <a href="{{ route('profile.edit') }}" class="bg-gray-700 text-white px-4 py-2 rounded-lg text-center mt-4">Editar Perfil</a>
+            <a href="{{ route('profile.edit') }}" class="bg-gray-700 text-white px-4 py-2 rounded-lg text-center mt-4 mx-auto md:mx-0">Editar Perfil</a>
         </div>
         <!-- Columna Derecha: Información del Usuario -->
-        <div class="flex flex-col items-center justify-center text-center">
+        <div class="flex flex-col items-center justify-center text-center w-full">
             <!-- Subtitulo de Bienvenida -->
             <h3 class="text-lg mb-2">Hello!</h3>
             <!-- Nombre del Usuario -->
@@ -30,27 +30,30 @@
             <p class="text-xl mb-4">Username: {{ '@' . Auth::user()->username }}</p>
             
             <!-- Sección de Estadísticas -->
-            <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 text-center">
-                <div class="flex flex-col items-center">
+            <div class="w-full d-flex flex-column flex-md-row justify-content-between mb-6 text-center">
+                <div class="flex flex-col items-center mb-4 md:mb-0">
                     <p class="text-lg font-semibold">Países Visitados</p>
                     <p class="text-2xl font-bold">{{ $posts->pluck('pais')->unique()->count() }}</p>
                 </div>
-                <div class="flex flex-col items-center">
+                <div class="flex flex-col items-center mb-4 md:mb-0">
                     <p class="text-lg font-semibold">Mis Publicaciones</p>
                     <p class="text-2xl font-bold">{{ count($posts) }}</p>
                 </div>
-                <div class="flex flex-col items-center">
+                <div class="flex flex-col items-center mb-4 md:mb-0">
                     <p class="text-lg font-semibold">Ciudades</p>
                     <p class="text-2xl font-bold">{{ $posts->pluck('ciudad')->unique()->count() }}</p>
                 </div>
             </div>
 
             <!-- Div para comparar países -->
-            <div id="paisesComparador" class="text-center">
-                <h3 class="text-lg font-semibold mb-2">Comparación de Países</h3>
-                <p class="text-base" id="totalCountries"></p>
-                <p class="text-base" id="visitedCountries">{{ $posts->pluck('pais')->unique()->count() }}</p>
-                <p class="text-base" id="visitedPercentage"></p> <!-- Nuevo elemento para mostrar el porcentaje -->
+            <div id="paisesComparador" class="bg-blue-100 p-4 rounded-lg shadow-lg text-center mb-6 w-full">
+                <h3 class="text-xl font-semibold mb-4">Comparación de Países</h3>
+                <div class="d-flex justify-content-center align-items-center">
+                    <p class="text-base" id="visitedCountries">{{ $posts->pluck('pais')->unique()->count() }}</p>
+                    <p class="text-base font-semibold mx-1">/</p>
+                    <p class="text-base" id="totalCountries"></p>
+                </div>
+                <p class="text-base font-semibold" id="visitedPercentage"></p> <!-- Nuevo elemento para mostrar el porcentaje -->
             </div>
             
             <!-- Botones de Acción -->
@@ -69,7 +72,7 @@
                         <!-- Imagen Publicacion -->
                         @if($post->imagen_post)
                             <div class="overflow-hidden" style="height: 300px;"> <!-- Aumentar la altura a 300px -->
-                                <img src="{{ asset('storage/' . $post->imagen_post) }}" alt="Imagen del post" class="card-img-top" style="height: 100%; width: 100%; object-fit: cover;">
+                                <img src="{{ asset('storage/' . $post->imagen_post) }}" alt="Imagen del post" class="card-img-top" style="height: 100%; width: 100%; object-fit: contain;">
                             </div>
                         @endif
                         <!-- Informacion Publicacion -->
@@ -95,6 +98,7 @@
             @endforeach
         </div>
     </div>
+
 </div>
 
 <script>
@@ -111,8 +115,7 @@
                 const visitedPercentage = (visitedCountriesCount / totalCountries) * 100;
                 
                 // Mostrar resultados en el div 'paisesComparador'
-                document.getElementById('totalCountries').textContent = `Total de países disponibles: ${totalCountries}`;
-                document.getElementById('visitedCountries').textContent = `Países visitados: ${visitedCountriesCount}`;
+                document.getElementById('totalCountries').textContent = totalCountries;
                 document.getElementById('visitedPercentage').textContent = `Porcentaje visitado: ${visitedPercentage.toFixed(2)}%`;
             })
             .catch(error => console.error('Error fetching countries:', error));
