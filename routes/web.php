@@ -37,20 +37,11 @@ Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index
 Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');
 Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
 
-
 // Rutas para post/publicaciones
 Route::get('/posts', [PostController::class, 'index'])->name('post.index')->middleware('auth');
 Route::get('/posts/create', [PostController::class, 'create'])->name('post.create')->middleware('auth');
-
 // Define todas las rutas para el recurso 'posts' con middleware 'auth'
 Route::resource('posts', PostController::class)->middleware('auth');
-
-
-
-
-
-
-
 
 
 Auth::routes();
