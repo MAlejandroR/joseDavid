@@ -1,4 +1,3 @@
-<!-- Header -->
 @extends('layouts.app')
 
 @section('content')
@@ -34,16 +33,24 @@
             <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 text-center">
                 <div class="flex flex-col items-center">
                     <p class="text-lg font-semibold">Países Visitados</p>
-                    <p class="text-2xl font-bold">5</p>
+                    <p class="text-2xl font-bold">{{ $posts->pluck('pais')->unique()->count() }}</p>
                 </div>
                 <div class="flex flex-col items-center">
                     <p class="text-lg font-semibold">Mis Publicaciones</p>
-                    <p class="text-2xl font-bold">10</p>
+                    <p class="text-2xl font-bold">{{ count($posts) }}</p>
                 </div>
                 <div class="flex flex-col items-center">
-                    <p class="text-lg font-semibold">Destinos</p>
-                    <p class="text-2xl font-bold">7</p>
+                    <p class="text-lg font-semibold">Ciudades</p>
+                    <p class="text-2xl font-bold">{{ $posts->pluck('ciudad')->unique()->count() }}</p>
                 </div>
+            </div>
+
+            <!-- Div para comparar países -->
+            <div id="paisesComparador" class="text-center">
+                <h3 class="text-lg font-semibold mb-2">Comparación de Países</h3>
+                <p class="text-base" id="totalCountries"></p>
+                <p class="text-base" id="visitedCountries">{{ $posts->pluck('pais')->unique()->count() }}</p>
+                <p class="text-base" id="visitedPercentage"></p> <!-- Nuevo elemento para mostrar el porcentaje -->
             </div>
             
             <!-- Botones de Acción -->
@@ -88,7 +95,28 @@
             @endforeach
         </div>
     </div>
-
-
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtener todos los países disponibles
+        fetch('https://restcountries.com/v3.1/all')
+            .then(response => response.json())
+            .then(data => {
+                const allCountries = data.map(country => country.name.common);
+                const visitedCountriesCount = {{ $posts->pluck('pais')->unique()->count() }};
+                const totalCountries = allCountries.length;
+                
+                // Calcular el porcentaje de países visitados
+                const visitedPercentage = (visitedCountriesCount / totalCountries) * 100;
+                
+                // Mostrar resultados en el div 'paisesComparador'
+                document.getElementById('totalCountries').textContent = `Total de países disponibles: ${totalCountries}`;
+                document.getElementById('visitedCountries').textContent = `Países visitados: ${visitedCountriesCount}`;
+                document.getElementById('visitedPercentage').textContent = `Porcentaje visitado: ${visitedPercentage.toFixed(2)}%`;
+            })
+            .catch(error => console.error('Error fetching countries:', error));
+    });
+</script>
+
 @endsection

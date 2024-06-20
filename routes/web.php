@@ -42,6 +42,9 @@ Route::get('/posts', [PostController::class, 'index'])->name('post.index')->midd
 Route::get('/posts/create', [PostController::class, 'create'])->name('post.create')->middleware('auth');
 // Define todas las rutas para el recurso 'posts' con middleware 'auth'
 Route::resource('posts', PostController::class)->middleware('auth');
+Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+
+
 
 
 Auth::routes();
