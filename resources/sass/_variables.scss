@@ -19,6 +19,9 @@ $color-white: #ffffff;
 $color-black: #000000;
 
 
+a{
+    text-decoration: none !important; 
+}
 
 .text-white {
     color: $color-white;

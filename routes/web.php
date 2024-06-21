@@ -47,4 +47,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/{userId}/posts/{postId}/attach', [UserPostController::class, 'attachPostToUser']);
 });
 
+Route::get('/about', function () {return view('about');})->name('about');
+
 Auth::routes();

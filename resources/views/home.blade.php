@@ -5,7 +5,7 @@
 <!-- Contenido principal -->
 <div class="container mx-auto mt-8 px-6">
     <!-- Mapa del mundo Open Street Map | Leaflet -->
-    <div class="bg-black rounded-lg p-8 mb-8">
+    <div class="bg-gray-900 rounded-lg p-8 mb-8">
         <h2 class="text-2xl font-semibold mb-4 text-white">Sumérgete en tu siguiente escapada</h2>
         <div class="w-full h-96 bg-gray-300 flex justify-center items-center rounded-lg">
             <div id="mi_mapa" class="w-full h-96"></div>
