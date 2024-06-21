@@ -15,5 +15,12 @@ class Post extends Model
         'ciudad',
         'descripcion_post',
         'fecha_publicacion',
+        'user_id', // Añadir user_id a los fillable
     ];
+
+    // Definir la relación con el usuario que creó el post
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

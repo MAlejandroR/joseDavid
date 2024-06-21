@@ -1,17 +1,15 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\PostController;
 
 class UserController extends Controller
 {
     public function show($id)
     {
-        // Obtener el usuario con el ID proporcionado
-        $user = User::find($id);
+        // Obtener el usuario con el ID proporcionado junto con sus posts
+        $user = User::with('posts')->find($id);
 
         // Verificar si se encontró el usuario
         if (!$user) {
@@ -19,9 +17,10 @@ class UserController extends Controller
             abort(404);
         }
 
-        // Pasar los datos del usuario a la vista
+        // Pasar los datos del usuario y sus posts a la vista
         return view('profile.show', ['user' => $user]);
     }
 }
+
 
 

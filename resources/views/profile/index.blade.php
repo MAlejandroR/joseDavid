@@ -63,15 +63,15 @@
         </div>
     </div>
 
-    <!-- Bloques Publicacion -->
-    <div class="container pt-5 d-flex justify-content-center">
-        <div class="row">
+    <!-- Bloques Publicaciones -->
+    <div class="container pt-5">
+        <div class="row justify-content-center">
             @foreach($posts as $post)
                 <div class="col-12 col-md-6 col-lg-4 mb-4">
                     <div class="card h-100">
                         <!-- Imagen Publicacion -->
                         @if($post->imagen_post)
-                            <div class="overflow-hidden" style="height: 300px;"> <!-- Aumentar la altura a 300px -->
+                            <div class="overflow-hidden" style="height: 300px;">
                                 <img src="{{ asset('storage/' . $post->imagen_post) }}" alt="Imagen del post" class="card-img-top" style="height: 100%; width: 100%; object-fit: contain;">
                             </div>
                         @endif
@@ -79,12 +79,12 @@
                         <div class="card-body d-flex flex-column">
                             <!-- Información Usuario -->
                             <div class="d-flex align-items-center mb-2">
-                                <!-- Imagen de Perfil -->
+                                <!-- Imagen de Perfil del Usuario -->
                                 <div class="rounded-circle overflow-hidden" style="width: 48px; height: 48px;">
-                                    <img src="{{ asset('storage/' . Auth::user()->imagen_perfil) }}" alt="Imagen Perfil" class="img-fluid">
+                                    <img src="{{ asset('storage/' . $user->imagen_perfil) }}" alt="Imagen Perfil" class="img-fluid">
                                 </div>
                                 <!-- Nombre Usuario -->
-                                <p class="mb-0 ml-3 text-dark font-weight-bold">{{ '@' . Auth::user()->username }}</p>
+                                <p class="mb-0 ml-3 text-dark font-weight-bold">{{ '@' . $user->username }}</p>
                             </div>
                             <!-- Ubicacion Publicacion -->
                             <p class="text-muted small mb-1">{{ $post->pais }}, {{ $post->ciudad }}</p>
@@ -98,6 +98,8 @@
             @endforeach
         </div>
     </div>
+
+
 
 </div>
 

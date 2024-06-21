@@ -4,14 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::all();
+        // Obtener el usuario autenticado
+        $user = Auth::user();
+
+        // Obtener todos los posts del usuario autenticado
+        $posts = Post::where('user_id', $user->id)->get();
+
         return view('posts.index', compact('posts'));
     }
 
@@ -46,28 +51,31 @@ class PostController extends Controller
                 ->withInput();
         }
 
+        // Obtener el usuario autenticado
+        $user = Auth::user();
+
+        // Crear un nuevo post
         $nuevoPost = new Post();
 
-        // Recuperar el archivo subido
-        $archivo = $request->file('imagen_post');
+        // Manejar la subida de la imagen
+        if ($request->hasFile('imagen_post')) {
+            $archivo = $request->file('imagen_post');
+            $nombreOriginal = $archivo->getClientOriginalName();
+            $rutaDirectorio = 'ImagenesPost/' . $user->id . '_' . $user->username;
+            $rutaArchivo = $archivo->storeAs($rutaDirectorio, $nombreOriginal, 'public');
+            $nuevoPost->imagen_post = $rutaArchivo;
+        }
 
-        // Crear la ruta personalizada para guardar la imagen
-        $userId = $request->user()->id; // Asumiendo que el usuario está autenticado y tiene un ID
-        $username = $request->user()->username; // Asumiendo que el usuario autenticado tiene un nombre de usuario
-        $nombreOriginal = $archivo->getClientOriginalName(); // Obtener el nombre original del archivo
-
-        // Crear la ruta con el id del usuario y el nombre del usuario
-        $rutaDirectorio = 'ImagenesPost/' . $userId . '_' . $username;
-
-        // Guardar el archivo en la ruta especificada y mantener el nombre original
-        $rutaArchivo = $archivo->storeAs($rutaDirectorio, $nombreOriginal, 'public');
-
-        $nuevoPost->imagen_post = $rutaArchivo; // Asumiendo que tienes una columna llamada 'imagen_post' en tu tabla 'posts'
+        // Asignar los demás campos del post
         $nuevoPost->pais = $request->pais;
         $nuevoPost->ciudad = $request->ciudad;
         $nuevoPost->descripcion_post = $request->descripcion_post;
         $nuevoPost->fecha_publicacion = $request->fecha_publicacion;
 
+        // Asignar el id del usuario al post
+        $nuevoPost->user_id = $user->id;
+
+        // Guardar el post
         $nuevoPost->save();
 
         return redirect()->back()->with('success', 'Post creado correctamente');

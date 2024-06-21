@@ -4,10 +4,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
-
+use App\Http\Controllers\UserPostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,33 +18,33 @@ use App\Http\Controllers\PostController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+// Esta línea es opcional y depende de tu configuración de entorno
 URL::forceScheme('http');
 
-//Ruta para la pagina de Home
+// Ruta para la página de Home
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-//Ruta para la pagina de inicio de sesión
-Route::get('/', function () {return view('auth/login');});
+// Ruta para la página de inicio de sesión
+Route::get('/', function () {
+    return view('auth/login');
+});
 
-//Rutas para Incio y Registro de Sesión
+// Rutas para Inicio y Registro de Sesión
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 
-// Rutas para User_Contoller
-// Para proteger tus rutas para que solo los usuarios autenticados puedan acceder a la página de perfil.
-Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index')->middleware('auth');
-Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');
-Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
-
-// Rutas para post/publicaciones
-Route::get('/posts', [PostController::class, 'index'])->name('post.index')->middleware('auth');
-Route::get('/posts/create', [PostController::class, 'create'])->name('post.create')->middleware('auth');
-// Define todas las rutas para el recurso 'posts' con middleware 'auth'
-Route::resource('posts', PostController::class)->middleware('auth');
-Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
-
-
-
+// Rutas para ProfileController con middleware de autenticación
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    
+    // Rutas para PostController
+    Route::resource('posts', PostController::class);
+    
+    // Ruta adicional para UserPostController
+    Route::get('/users/{userId}/posts/{postId}/attach', [UserPostController::class, 'attachPostToUser']);
+});
 
 Auth::routes();
-

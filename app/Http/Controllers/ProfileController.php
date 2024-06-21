@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
-
-
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -16,9 +16,10 @@ class ProfileController extends Controller
         // Obtener el usuario autenticado
         $user = Auth::user();
 
-        // Retornar la vista con los datos del usuario
-        $posts = Post::all(); // O la lógica que uses para obtener los posts del perfil
+        // Obtener los posts del usuario autenticado
+        $posts = Post::where('user_id', $user->id)->get();
 
+        // Retornar la vista con los datos del usuario y sus posts
         return view('profile.index', compact('user', 'posts'));
     }
 
@@ -31,7 +32,7 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $user = auth()->user();
-        
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
@@ -49,7 +50,7 @@ class ProfileController extends Controller
 
             // Eliminar la imagen existente si existe
             if ($user->imagen_perfil) {
-                \Storage::disk('public')->delete($user->imagen_perfil);
+                Storage::disk('public')->delete($user->imagen_perfil);
             }
 
             // Crear la nueva ruta de almacenamiento
@@ -63,22 +64,19 @@ class ProfileController extends Controller
             $user->imagen_perfil = $path;
         }
 
-    // Actualizar el resto de los campos
-    $user->name = $request->name;
-    $user->email = $request->email;
-    $user->username = $request->username;
-    $user->fecha_nacimiento = $request->birthdate;
-    $user->descripcion = $request->description;
+        // Actualizar el resto de los campos
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->username = $request->username;
+        $user->fecha_nacimiento = $request->fecha_nacimiento; // Asegúrate de que el nombre del campo coincida
+        $user->descripcion = $request->descripcion; // Asegúrate de que el nombre del campo coincida
 
-    if ($request->password) {
-        $user->password = Hash::make($request->password);
+        if ($request->password) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return redirect()->route('profile.index')->with('success', 'Perfil actualizado correctamente.');
     }
-
-    $user->save();
-
-    return redirect()->route('profile.index')->with('success', 'Perfil actualizado correctamente.');
 }
-}
-
-
-

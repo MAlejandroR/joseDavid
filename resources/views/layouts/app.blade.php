@@ -9,6 +9,8 @@
 
     <title>{{ config('app.name', 'JourneySnap') }}</title>
 
+    <!-- <link rel="icon" href="{{ asset('path/a/tu/favicon.ico') }}" type="image/x-icon"> -->
+
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
@@ -81,6 +83,9 @@
             @yield('content')
         </main>
     </div>
+
+    <!-- Incluir el footer desde el directorio layouts -->
+    @include('partials.footer')
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybby7tv9Q6QAurZD0RuFWN6NRN8e+a3/5PAJpDsmPZ+pG3moC" crossorigin="anonymous"></script>

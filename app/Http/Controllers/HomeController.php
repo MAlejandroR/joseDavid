@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
 use App\Models\Post;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -26,11 +26,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        
-        // Retornar la vista con los datos del usuario
-        $posts = Post::all(); // O la lógica que uses para obtener los posts del perfil
+        // Obtener el usuario autenticado
+        $user = Auth::user();
+
+        // Obtener los posts del usuario autenticado
+        $posts = $user ? Post::where('user_id', $user->id)->get() : collect();
 
         return view('home', compact('posts'));
-
     }
 }
